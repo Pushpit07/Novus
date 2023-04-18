@@ -68,6 +68,7 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 					try {
 						const basePromptPrefix = `
                         You are an expert at phishing and social engineering detection. Use insight to describe the message given below and describe if it looks like a legitimate or phishing/social engineering message.
+						List down the result in points and start each of the bullet points with an appropriate emoji that displays well in a browser extension.
 
                         Message:
                         `;
@@ -87,7 +88,8 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				};
 
 				const displayResult = (summary_result) => {
-					document.getElementById(contentDivId).innerHTML = `<b style="text-align: center;">Based on our analysis:</b>\n` + summary_result;
+					document.getElementById(contentDivId).innerHTML =
+						`<b style="text-align: center;">Based on our analysis:</b>\n` + "<div>" + summary_result + "</div>";
 					document.getElementById(wrapperDivId).style.display = "block";
 				};
 
@@ -98,14 +100,9 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 
 				const selection = window.getSelection();
 				const range = selection.getRangeAt(0);
-				// Save the range for later use
-				const savedRange = range.cloneRange();
 
 				// Get the parent element of the selected text
 				const parentElement = range.commonAncestorContainer.parentElement;
-				// Do something with the parent element
-				// console.log("Selected text:", selectedText);
-				// console.log("Parent element:", parentElement);
 
 				// Create the overlay div
 				const overlayDiv = document.createElement("div");
@@ -128,7 +125,6 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				wrapperDiv.id = wrapperDivId;
 				wrapperDiv.style.position = "absolute";
 				wrapperDiv.style.top = String(top + 20) + "px";
-				// wrapperDiv.style.left = String(parseInt(parentElement.offsetLeft) + parentElement.offsetWidth) + "px";
 				wrapperDiv.style.left = rect.right + "40px";
 				wrapperDiv.style.width = "300px";
 				wrapperDiv.style.background = "#eee";
@@ -144,12 +140,20 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				contentDiv.style.whiteSpace = "pre-wrap";
 				wrapperDiv.appendChild(contentDiv);
 
-				const elem = document.createElement("img");
-				elem.setAttribute("src", "./assets/logo.png");
-				elem.setAttribute("height", "768");
-				elem.setAttribute("width", "1024");
-				elem.setAttribute("alt", "Logo");
-				wrapperDiv.appendChild(elem);
+				const imgElem = document.createElement("img");
+				imgElem.setAttribute(
+					"src",
+					// "https://raw.githubusercontent.com/Pushpit07/Novus/main/assets/logo.png?token=GHSAT0AAAAAACBGHCV2JTTLHHAJXRJDLYYIZB6LUMQ"
+					"https://image.typedream.com/cdn-cgi/image/width=384/https://api.typedream.com/v0/document/public/11ef37f3-33f8-411e-9a31-45f48d78e5a2_Novus_logo_1000_1000_px_1000_300_px_500_500_px_500_250_px_500_175_px_png.png?bucket=document"
+				);
+				imgElem.setAttribute("alt", "Logo");
+				imgElem.style.width = "90px";
+				imgElem.style.height = "30px";
+				imgElem.style.display = "block";
+				imgElem.style.margin = "auto";
+				imgElem.style.marginTop = "30px";
+
+				wrapperDiv.appendChild(imgElem);
 
 				// create close button
 				const closeButton = document.createElement("button");
@@ -170,16 +174,7 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				// add the new div element to the DOM
 				document.body.appendChild(wrapperDiv);
 
-				// Restore the selection
-				// selection.removeAllRanges();
-				// selection.addRange(savedRange);
-
-				// // create a new shadow root for the parent element
-				// const shadow = parentElement.attachShadow({ mode: "open" });
-				// // add the new div element to the shadow DOM
-				// shadow.appendChild(div);
-
-				// await analyzeText(selectedText);
+				await analyzeText(selectedText);
 			},
 		});
 	}

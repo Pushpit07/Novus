@@ -131,9 +131,10 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				// wrapperDiv.style.left = String(parseInt(parentElement.offsetLeft) + parentElement.offsetWidth) + "px";
 				wrapperDiv.style.left = rect.right + "40px";
 				wrapperDiv.style.width = "300px";
-				wrapperDiv.style.background = "#ff6e41";
+				wrapperDiv.style.background = "#eee";
 				wrapperDiv.style.padding = "20px";
 				wrapperDiv.style.borderRadius = "8px";
+				wrapperDiv.style.border = "1px solid #ff6e41";
 				wrapperDiv.style.zIndex = "999999";
 
 				const contentDiv = document.createElement("div");
@@ -142,6 +143,13 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				contentDiv.style.padding = "0px 4px 0px 0px";
 				contentDiv.style.whiteSpace = "pre-wrap";
 				wrapperDiv.appendChild(contentDiv);
+
+				const elem = document.createElement("img");
+				elem.setAttribute("src", "./assets/logo.png");
+				elem.setAttribute("height", "768");
+				elem.setAttribute("width", "1024");
+				elem.setAttribute("alt", "Logo");
+				wrapperDiv.appendChild(elem);
 
 				// create close button
 				const closeButton = document.createElement("button");
@@ -171,7 +179,7 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				// // add the new div element to the shadow DOM
 				// shadow.appendChild(div);
 
-				await analyzeText(selectedText);
+				// await analyzeText(selectedText);
 			},
 		});
 	}

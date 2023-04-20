@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"version": "1.0",
 	"name": "Novus",
-	"description": "Surf Web3 phish-free!",
+	"description": "Analyze suspicious messages in seconds!",
 	"icons": {
 		"48": "assets/48.png",
 		"96": "assets/96.png"
@@ -12,7 +12,7 @@
 	},
 	"action": {
 		"default_popup": "index.html",
-		"default_title": "Surf Web3 phish-free!"
+		"default_title": "Analyze suspicious messages in seconds!"
 	},
 	"permissions": ["contextMenus", "tabs", "storage", "activeTab", "scripting"]
 }

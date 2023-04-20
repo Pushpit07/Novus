@@ -23,7 +23,7 @@ body {
 }
 
 #instruction {
-	text-align: center;
+	text-align: start;
 	font-size: 16px;
 	color: white;
 	margin-top: 24px;

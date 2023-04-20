@@ -1,6 +1,6 @@
 chrome.contextMenus.create({
 	id: "analyzeIntentContextMenuItem",
-	title: "Analyze Intent",
+	title: "Analyze Text",
 	contexts: ["selection"],
 });
 
@@ -80,7 +80,7 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 
 				const displayResult = (summary_result) => {
 					document.getElementById(contentDivId).innerHTML =
-						`<b style="text-align: center;">Based on our analysis:</b>\n` + "<div>" + summary_result + "</div>";
+						`<b style="text-align: center;">Based on our analysis:</b>\n\n` + "<div>" + summary_result + "</div>";
 					document.getElementById(wrapperDivId).style.display = "block";
 				};
 
@@ -115,8 +115,8 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				const wrapperDiv = document.createElement("div");
 				wrapperDiv.id = wrapperDivId;
 				wrapperDiv.style.position = "absolute";
-				wrapperDiv.style.top = String(top + 20) + "px";
-				wrapperDiv.style.left = rect.right + "40px";
+				wrapperDiv.style.top = String(top + 60) + "px";
+				wrapperDiv.style.left = rect.left + "40px";
 				wrapperDiv.style.width = "300px";
 				wrapperDiv.style.background = "#eee";
 				wrapperDiv.style.padding = "20px";

@@ -1,5 +1,5 @@
 # Novus
 
-<img src="./assets/ext.png" alt="extension" />
+<img src="./B/assets/ext.png" alt="extension" />
 
 <br/>

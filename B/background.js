@@ -12,7 +12,6 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 			target: { tabId: tab.id },
 			args: [selectedText],
 			func: async (selectedText) => {
-				// chrome.runtime.sendMessage({ type: "selectedText", data: selectedText });
 				const wrapperDivId = "wrapper-div";
 				const contentDivId = "novus-analyze-intent-popup";
 
@@ -32,7 +31,13 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 					// Get your API key from storage
 					const key = await getKey();
 					const url = "https://api.openai.com/v1/completions";
-					console.log("key:", key);
+
+					if (!key) {
+						overlayDiv.remove();
+						wrapperDiv.remove();
+						alert("Please enter your OpenAI API key in the extension");
+						return;
+					}
 
 					// Call completions endpoint
 					try {
@@ -66,21 +71,18 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 
 				const analyzeText = async (selectedText) => {
 					try {
-						const basePromptPrefix = `
-                        You are an expert at phishing and social engineering detection. Use insight to describe the message given below and describe if it looks like a legitimate or phishing/social engineering message.
+						const basePrompt = `
+						You are an expert at phishing and social engineering detection. Use insight to describe this message "${selectedText}" and describe if it looks like a legitimate OR phishing/social engineering message. Don't forget to explain your thesis why, like you would to a ten year old.
 						List down the result in points and start each of the bullet points with an appropriate emoji that displays well in a browser extension.
-
-                        Message:
                         `;
 
 						// Add this to call GPT-3
-						const baseCompletion = await generate(`${basePromptPrefix} ${selectedText}\n`);
+						const baseCompletion = await generate(`${basePrompt}\n`);
 
 						// Let's see what we get!
 						if (baseCompletion) {
 							const summary_result = baseCompletion.text;
 							displayResult(summary_result);
-							console.log(summary_result);
 						}
 					} catch (error) {
 						console.log(error);
@@ -143,7 +145,6 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				const imgElem = document.createElement("img");
 				imgElem.setAttribute(
 					"src",
-					// "https://raw.githubusercontent.com/Pushpit07/Novus/main/assets/logo.png?token=GHSAT0AAAAAACBGHCV2JTTLHHAJXRJDLYYIZB6LUMQ"
 					"https://image.typedream.com/cdn-cgi/image/width=384/https://api.typedream.com/v0/document/public/11ef37f3-33f8-411e-9a31-45f48d78e5a2_Novus_logo_1000_1000_px_1000_300_px_500_500_px_500_250_px_500_175_px_png.png?bucket=document"
 				);
 				imgElem.setAttribute("alt", "Logo");
@@ -179,12 +180,3 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 		});
 	}
 });
-
-// chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
-// 	if (req.type === "selectedText") {
-// 		var selectedText = req.data;
-// 		console.log("selectedText:", selectedText);
-// 		// var popupDiv = document.getElementById("popup-div");
-// 		// popupDiv.innerHTML = selectedText;
-// 	}
-// });

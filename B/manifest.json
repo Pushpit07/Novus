@@ -1,0 +1,18 @@
+{
+	"manifest_version": 3,
+	"version": "1.0",
+	"name": "Novus",
+	"description": "Surf Web3 phish-free!",
+	"icons": {
+		"48": "assets/48.png",
+		"96": "assets/96.png"
+	},
+	"background": {
+		"service_worker": "background.js"
+	},
+	"action": {
+		"default_popup": "index.html",
+		"default_title": "Surf Web3 phish-free!"
+	},
+	"permissions": ["contextMenus", "tabs", "storage", "activeTab", "scripting"]
+}

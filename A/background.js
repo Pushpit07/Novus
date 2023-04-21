@@ -15,64 +15,22 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				const wrapperDivId = "wrapper-div";
 				const contentDivId = "novus-analyze-intent-popup";
 
-				const generate = async (prompt) => {
-					// Get your API key from storage
-					// TODO: <ENTER YOUR OPENAI API KEY HERE>
-					const key = "";
-					const url = "https://api.openai.com/v1/completions";
-
-					if (!key) {
-						overlayDiv.remove();
-						wrapperDiv.remove();
-						alert("Please enter your OpenAI API key in the extension");
-						return;
-					}
-
-					// Call completions endpoint
+				const analyzeText = async (selectedText) => {
 					try {
-						const completionResponse = await fetch(url, {
+						const result = await fetch("https://novus-server.vercel.app/api/openai/analyze-text-intent", {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json",
-								Authorization: `Bearer ${key}`,
 							},
 							body: JSON.stringify({
-								model: "text-davinci-003",
-								prompt: prompt,
-								max_tokens: 3000,
-								temperature: 0.7,
+								text: selectedText,
 							}),
 						});
 
-						// Select the top choice and send back
-						const completion = await completionResponse.json();
-						if (completion.error) {
-							alert("OpenAI Quota Exceeded\n\n" + completion.error.message);
-							return;
-						}
-						return completion.choices.pop();
-					} catch (error) {
-						console.log(error);
-						alert(error.message);
-						return;
-					}
-				};
+						const summary_result_json = await result.json();
+						const summary_result = summary_result_json.responseData;
 
-				const analyzeText = async (selectedText) => {
-					try {
-						const basePrompt = `
-						You are an expert at phishing and social engineering detection. Use insight to describe this message "${selectedText}" and describe if it looks like a legitimate OR phishing/social engineering message. Don't forget to explain your thesis why, like you would to a ten year old.
-						List down the result in points and start each of the bullet points with an appropriate emoji that displays well in a browser extension.
-                        `;
-
-						// Add this to call GPT-3
-						const baseCompletion = await generate(`${basePrompt}\n`);
-
-						// Let's see what we get!
-						if (baseCompletion) {
-							const summary_result = baseCompletion.text;
-							displayResult(summary_result);
-						}
+						displayResult(summary_result);
 					} catch (error) {
 						console.log(error);
 					}

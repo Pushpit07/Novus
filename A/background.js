@@ -60,9 +60,9 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				overlayDiv.style.left = "0";
 				overlayDiv.style.width = "100%";
 				overlayDiv.style.height = "100%";
-				overlayDiv.style.background = "rgba(0, 0, 0, 0.5)";
+				// overlayDiv.style.background = "rgba(0, 0, 0, 0.5)";
 				overlayDiv.style.zIndex = "99999";
-				overlayDiv.style.backdropFilter = "blur(5px)";
+				// overlayDiv.style.backdropFilter = "blur(5px)";
 				document.body.appendChild(overlayDiv);
 
 				const rect = parentElement.getBoundingClientRect();

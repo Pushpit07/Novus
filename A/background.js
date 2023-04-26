@@ -1,7 +1,7 @@
 chrome.contextMenus.create({
 	id: "analyzeIntentContextMenuItem",
 	title: "Analyze Text",
-	contexts: ["selection"],
+	contexts: ["all"],
 });
 
 chrome.contextMenus.onClicked.addListener(async function (info, tab) {
@@ -14,7 +14,6 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 			func: async (selectedText) => {
 				const wrapperDivId = "wrapper-div";
 				const contentDivId = "novus-analyze-intent-popup";
-
 				const analyzeText = async (selectedText) => {
 					try {
 						const result = await fetch("https://novus-server.vercel.app/api/openai/analyze-text-intent", {
@@ -26,49 +25,40 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 								text: selectedText,
 							}),
 						});
-
 						const summary_result_json = await result.json();
 						const summary_result = summary_result_json.responseData;
-
 						displayResult(summary_result);
 					} catch (error) {
 						console.log(error);
 					}
 				};
-
 				const displayResult = (summary_result) => {
 					document.getElementById(contentDivId).innerHTML =
 						`<b style="text-align: center;">Based on our analysis:</b>\n\n` + "<div>" + summary_result + "</div>";
 					document.getElementById(wrapperDivId).style.display = "block";
 				};
-
 				try {
 					const analysisDiv = document.getElementById(wrapperDivId);
 					analysisDiv.remove();
 				} catch (e) {}
-
 				const selection = window.getSelection();
 				const range = selection.getRangeAt(0);
-
 				// Get the parent element of the selected text
 				const parentElement = range.commonAncestorContainer.parentElement;
-
 				// Create the overlay div
 				const overlayDiv = document.createElement("div");
-				overlayDiv.style.position = "fixed";
-				overlayDiv.style.top = "0";
-				overlayDiv.style.left = "0";
-				overlayDiv.style.width = "100%";
-				overlayDiv.style.height = "100%";
+				// overlayDiv.style.position = "fixed";
+				// overlayDiv.style.top = "0";
+				// overlayDiv.style.left = "0";
+				// overlayDiv.style.width = "100%";
+				// overlayDiv.style.height = "100%";
 				// overlayDiv.style.background = "rgba(0, 0, 0, 0.5)";
-				overlayDiv.style.zIndex = "99999";
+				// overlayDiv.style.zIndex = "99999";
 				// overlayDiv.style.backdropFilter = "blur(5px)";
 				document.body.appendChild(overlayDiv);
-
 				const rect = parentElement.getBoundingClientRect();
 				const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 				const top = rect.top + scrollTop;
-
 				// create a new div element
 				const wrapperDiv = document.createElement("div");
 				wrapperDiv.id = wrapperDivId;
@@ -80,15 +70,13 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				wrapperDiv.style.padding = "20px";
 				wrapperDiv.style.borderRadius = "8px";
 				wrapperDiv.style.border = "1px solid #ff6e41";
-				wrapperDiv.style.zIndex = "999999";
-
+				wrapperDiv.style.zIndex = "99999999999";
 				const contentDiv = document.createElement("div");
 				contentDiv.id = contentDivId;
 				contentDiv.innerHTML = "Summarizing...";
 				contentDiv.style.padding = "0px 4px 0px 0px";
 				contentDiv.style.whiteSpace = "pre-wrap";
 				wrapperDiv.appendChild(contentDiv);
-
 				const imgElem = document.createElement("img");
 				imgElem.setAttribute(
 					"src",
@@ -100,9 +88,7 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 				imgElem.style.display = "block";
 				imgElem.style.margin = "auto";
 				imgElem.style.marginTop = "30px";
-
 				wrapperDiv.appendChild(imgElem);
-
 				// create close button
 				const closeButton = document.createElement("button");
 				closeButton.id = "close-button";
@@ -118,10 +104,8 @@ chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 					wrapperDiv.remove();
 				});
 				wrapperDiv.appendChild(closeButton);
-
 				// add the new div element to the DOM
 				document.body.appendChild(wrapperDiv);
-
 				await analyzeText(selectedText);
 			},
 		});
